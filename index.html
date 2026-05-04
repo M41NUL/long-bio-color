@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LONG BIO COLOR</title>
+<link rel="icon" type="image/png" href="https://dl.dir.freefiremobile.com/common/web_event/tweb-event/FFSH/assets-common/ff-logo-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: rgba(255,255,255,0.05);
+    --surface-hover: rgba(255,255,255,0.09);
+    --border: rgba(255,255,255,0.12);
+    --border-bright: rgba(255,255,255,0.22);
+    --text: #f0f0f5;
+    --text-secondary: rgba(240,240,245,0.55);
+    --accent: #ffb400;
+    --accent-dim: rgba(255,180,0,0.15);
+    --glass: rgba(20,20,30,0.72);
+    --glass-light: rgba(255,255,255,0.06);
+    --pill-track: rgba(255,255,255,0.1);
+    --pill-thumb: #fff;
+    --pill-thumb-shadow: rgba(0,0,0,0.35);
+    --input-bg: rgba(255,255,255,0.04);
+    --preview-bg: rgba(0,0,0,0.5);
+    --footer-bg: rgba(255,255,255,0.03);
+  }
+  [data-theme="light"] {
+    --bg: #f2f2f7;
+    --surface: rgba(255,255,255,0.72);
+    --surface-hover: rgba(255,255,255,0.9);
+    --border: rgba(0,0,0,0.1);
+    --border-bright: rgba(0,0,0,0.18);
+    --text: #1c1c1e;
+    --text-secondary: rgba(28,28,30,0.55);
+    --accent: #d4930a;
+    --accent-dim: rgba(212,147,10,0.12);
+    --glass: rgba(242,242,247,0.85);
+    --glass-light: rgba(255,255,255,0.6);
+    --pill-track: rgba(0,0,0,0.1);
+    --pill-thumb: #fff;
+    --pill-thumb-shadow: rgba(0,0,0,0.2);
+    --input-bg: rgba(0,0,0,0.04);
+    --preview-bg: rgba(0,0,0,0.06);
+    --footer-bg: rgba(0,0,0,0.03);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 0;
+    transition: background 0.45s ease, color 0.45s ease;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background blobs */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  body::before {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(255,180,0,0.08) 0%, transparent 70%);
+    top: -120px; left: -120px;
+  }
+  body::after {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(100,80,255,0.07) 0%, transparent 70%);
+    bottom: 80px; right: -80px;
+  }
+  [data-theme="light"] body::before { background: radial-gradient(circle, rgba(255,180,0,0.12) 0%, transparent 70%); }
+  [data-theme="light"] body::after { background: radial-gradient(circle, rgba(100,80,255,0.08) 0%, transparent 70%); }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+    animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(28px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 28px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,180,0,0.25);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+  }
+  .header-logo:hover { transform: scale(1.08) rotate(-3deg); }
+  .header-logo img { width: 26px; height: 26px; }
+  .header-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+  .header-title span {
+    color: var(--accent);
+  }
+
+  /* ─── TOGGLE PILL ─── */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toggle-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    transition: color 0.3s;
+  }
+  .toggle-pill {
+    position: relative;
+    width: 50px; height: 28px;
+    cursor: pointer;
+  }
+  .toggle-pill input { display: none; }
+  .toggle-track {
+    position: absolute; inset: 0;
+    background: var(--pill-track);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    transition: background 0.35s cubic-bezier(0.4,0,0.2,1);
+    backdrop-filter: blur(8px);
+  }
+  .toggle-pill input:checked ~ .toggle-track {
+    background: rgba(255,180,0,0.75);
+    border-color: rgba(255,180,0,0.4);
+  }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    background: var(--pill-thumb);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px var(--pill-thumb-shadow);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    pointer-events: none;
+  }
+  .toggle-pill input:checked ~ .toggle-thumb {
+    transform: translateX(22px);
+  }
+
+  /* ─── GLASS CARD ─── */
+  .card {
+    background: var(--glass);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 22px;
+    margin-bottom: 14px;
+    transition: background 0.45s ease, border-color 0.45s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: linear-gradient(135deg, var(--glass-light) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+  }
+
+  /* ─── COLOR PALETTE ─── */
+  .palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 18px;
+  }
+  .color-btn {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .color-btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.18);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .color-btn:hover {
+    transform: scale(1.22) translateY(-2px);
+    border-color: rgba(255,255,255,0.6);
+  }
+  .color-btn:hover::after { opacity: 1; }
+  .color-btn:active { transform: scale(0.94); }
+
+  .custom-color-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  input[type="color"] {
+    width: 44px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    cursor: pointer;
+    padding: 2px;
+    transition: border-color 0.2s;
+  }
+  input[type="color"]:hover { border-color: var(--border-bright); }
+
+  /* ─── TEXTAREA ─── */
+  textarea {
+    width: 100%;
+    height: 110px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-size: 15px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: var(--input-bg);
+    color: var(--text);
+    resize: none;
+    outline: none;
+    transition: border-color 0.25s, background 0.3s;
+    backdrop-filter: blur(8px);
+  }
+  textarea:focus {
+    border-color: rgba(255,180,0,0.5);
+    background: rgba(255,180,0,0.04);
+  }
+  [data-theme="light"] textarea:focus {
+    background: rgba(255,180,0,0.03);
+  }
+  textarea::placeholder { color: var(--text-secondary); }
+
+  .char-counter {
+    text-align: right;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 6px 2px 0;
+    letter-spacing: 0.2px;
+    transition: color 0.3s;
+  }
+  .char-counter.warn { color: #ff6b6b; }
+
+  /* ─── CONTROLS ─── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.22s, border-color 0.22s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    backdrop-filter: blur(10px);
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+  .btn:active { transform: scale(0.96) translateY(0); }
+  .btn.primary {
+    background: rgba(255,180,0,0.18);
+    border-color: rgba(255,180,0,0.4);
+    color: var(--accent);
+  }
+  .btn.primary:hover {
+    background: rgba(255,180,0,0.28);
+    border-color: rgba(255,180,0,0.6);
+  }
+
+  /* ─── STATUS TOAST ─── */
+  #status {
+    position: fixed;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999;
+    backdrop-filter: blur(16px);
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+  #status.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  #status.success {
+    background: rgba(48,209,88,0.9);
+    color: #fff;
+  }
+  #status.error {
+    background: rgba(255,69,58,0.9);
+    color: #fff;
+  }
+
+  /* ─── PREVIEW ─── */
+  .preview-box {
+    background: var(--preview-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    min-height: 64px;
+    font-size: 17px;
+    line-height: 1.5;
+    word-break: break-word;
+    backdrop-filter: blur(10px);
+    transition: background 0.3s;
+    color: #fff;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 28px;
+    padding: 28px 28px 24px;
+    background: var(--footer-bg);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 1;
+    animation: riseIn 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+    text-align: center;
+  }
+
+  .footer-dev {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-avatar-img {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,180,0,0.45);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .footer-avatar-img:hover { transform: scale(1.08); }
+  .footer-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+  }
+  .footer-handle {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    backdrop-filter: blur(8px);
+  }
+  .footer-link:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+  .footer-link:active { transform: scale(0.95); }
+  .footer-link svg { flex-shrink: 0; }
+
+  .footer-copy {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    letter-spacing: 0.2px;
+  }
+
+  /* ─── SEPARATOR ─── */
+  .sep {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+    border-radius: 1px;
+  }
+
+  /* Stagger card animations */
+  .card:nth-child(2) { animation-delay: 0.05s; }
+  .card:nth-child(3) { animation-delay: 0.1s; }
+  .card:nth-child(4) { animation-delay: 0.15s; }
+  .card:nth-child(5) { animation-delay: 0.2s; }
+
+  .fmt-btn { min-width: 52px; justify-content: center; gap: 5px; }
+  .fmt-btn b, .fmt-btn i, .fmt-btn u { font-size: 13px; }
+
+  /* iOS-style spring ripple on color btn click */
+  @keyframes springPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.35) translateY(-3px); }
+    70%  { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+  .color-btn.popped { animation: springPop 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+  @media (max-width: 480px) {
+    .header-title { font-size: 16px; }
+    .card { padding: 16px; }
+    footer { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="https://i.ibb.co/1tjyxPMJ/927db1619cd4.jpg" alt="Logo">
+      </div>
+      <div class="header-title">LONG BIO <span>COLOR</span></div>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-label" id="themeLabel">Dark</span>
+      <label class="toggle-pill">
+        <input type="checkbox" id="themeToggle">
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- COLOR PALETTE -->
+  <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0s both;">
+    <div class="section-label">Quick Colors</div>
+    <div class="palette" id="palette"></div>
+    <div class="section-label" style="margin-top:4px;">Custom Color</div>
+    <div class="custom-color-row">
+      <input type="color" id="colorPicker" value="#FF0000">
+      <button class="btn primary" onclick="applyCustomColor()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Add Color
+      </button>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.07s both;">
+    <div class="section-label">Bio Editor</div>
+    <textarea id="editor" placeholder="Type your bio here..."></textarea>
+    <div id="charCount" class="char-counter">0 characters</div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.12s both;">
+    <div class="controls">
+      <button class="btn fmt-btn" onclick="insertFormat('[b]')" title="Bold [b]">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>
+        <b style="font-style:normal;">B</b>
+      </button>
+      <button class="btn fmt-btn" onclick="insertFormat('[i]')" title="Italic [i]">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+        <i style="font-style:italic;">I</i>
+      </button>
+      <button class="btn fmt-btn" onclick="insertFormat('[u]')" title="Underline [u]">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg>
+        <u>U</u>
+      </button>
+      <button class="btn" onclick="clearEditor()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear
+      </button>
+      <button class="btn primary" onclick="copyBio()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Bio
+      </button>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.17s both;">
+    <div class="section-label">In-Game Preview</div>
+    <div id="preview" class="preview-box"><span style="color:rgba(255,255,255,0.25);font-size:14px;">Preview will appear here...</span></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-dev">
+    <img class="footer-avatar-img" src="https://i.ibb.co/jPQfktN2/cdd482772c1b.jpg" alt="Md. Mainul Islam">
+    <div class="footer-name">Md. Mainul Islam</div>
+    <div class="footer-handle">MAINUL - X</div>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/M41NUL" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.84 2.8 1.31 3.49 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a class="footer-link" href="https://t.me/mdmainulislaminfo" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.21-1.97 9.29c-.14.65-.52.81-1.06.5l-2.9-2.14-1.4 1.35c-.15.15-.28.28-.58.28l.21-2.95 5.34-4.83c.23-.21-.05-.32-.36-.11L7.13 14.6l-2.86-.9c-.62-.19-.63-.62.13-.92l11.18-4.31c.52-.19.97.12.36.74z"/></svg>
+      Telegram
+    </a>
+    <a class="footer-link" href="https://t.me/mainul_x_official" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.21-1.97 9.29c-.14.65-.52.81-1.06.5l-2.9-2.14-1.4 1.35c-.15.15-.28.28-.58.28l.21-2.95 5.34-4.83c.23-.21-.05-.32-.36-.11L7.13 14.6l-2.86-.9c-.62-.19-.63-.62.13-.92l11.18-4.31c.52-.19.97.12.36.74z"/></svg>
+      Channel
+    </a>
+    <a class="footer-link" href="https://t.me/mainul_x_official_gc" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.21-1.97 9.29c-.14.65-.52.81-1.06.5l-2.9-2.14-1.4 1.35c-.15.15-.28.28-.58.28l.21-2.95 5.34-4.83c.23-.21-.05-.32-.36-.11L7.13 14.6l-2.86-.9c-.62-.19-.63-.62.13-.92l11.18-4.31c.52-.19.97.12.36.74z"/></svg>
+      Group
+    </a>
+    <a class="footer-link" href="https://youtube.com/@mdmainulislaminfo" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+      YouTube
+    </a>
+    <a class="footer-link" href="mailto:githubmainul@gmail.com">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email
+    </a>
+  </div>
+  <div class="footer-copy">© <span id="footerYear"></span> MAINUL - X. All Rights Reserved.</div>
+</footer>
+
+<!-- STATUS TOAST -->
+<div id="status"></div>
+
+<script>
+  const colors = ["FFFF00","00FF00","FF0000","0000FF","00FFFF","FF00FF","FF9000","6E00FF","CCFF00","0F7209","FFD3EF","FFFFFF","000000","FF4500","1DA1F2","7289DA","00B0FF","FF6B6B","A8FF78","FFC0CB"];
+  const editor = document.getElementById('editor');
+  const preview = document.getElementById('preview');
+  const statusEl = document.getElementById('status');
+  const colorPicker = document.getElementById('colorPicker');
+  let statusTimer;
+
+  // Build palette
+  colors.forEach(hex => {
+    const btn = document.createElement('div');
+    btn.className = 'color-btn';
+    btn.style.backgroundColor = '#' + hex;
+    btn.title = '#' + hex;
+    btn.onclick = () => {
+      btn.classList.remove('popped');
+      void btn.offsetWidth;
+      btn.classList.add('popped');
+      btn.addEventListener('animationend', () => btn.classList.remove('popped'), { once: true });
+      applyColor(hex);
+    };
+    document.getElementById('palette').appendChild(btn);
+  });
+
+  function applyColor(hex) {
+    const start = editor.selectionStart;
+    const val = editor.value;
+    const tag = `[${hex.toUpperCase()}]`;
+    editor.value = val.slice(0, start) + tag + val.slice(start);
+    editor.selectionStart = editor.selectionEnd = start + tag.length;
+    editor.focus();
+    update();
+  }
+
+  function applyCustomColor() {
+    const hex = colorPicker.value.replace('#','').toUpperCase();
+    applyColor(hex);
+  }
+
+  function insertFormat(tag) {
+    const start = editor.selectionStart;
+    const val = editor.value;
+    editor.value = val.slice(0, start) + tag + val.slice(start);
+    editor.selectionStart = editor.selectionEnd = start + tag.length;
+    editor.focus();
+    update();
+  }
+
+  function clearEditor() {
+    editor.value = '';
+    update();
+    editor.focus();
+  }
+
+  function update() {
+    const text = editor.value;
+    const len = text.length;
+    const counter = document.getElementById('charCount');
+    counter.textContent = len + ' character' + (len !== 1 ? 's' : '');
+    counter.classList.toggle('warn', len > 120);
+
+    let html = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\[([A-F0-9]{6})\]/gi, (m, col) => `</span><span style="color:#${col}">`)
+      .replace(/\[b\]/gi, '<b>')
+      .replace(/\[i\]/gi, '<i>')
+      .replace(/\[u\]/gi, '<u>');
+
+    if(text.trim()){
+      preview.innerHTML = '<span>' + html + '</span>';
+    } else {
+      preview.innerHTML = '<span style="color:rgba(255,255,255,0.25);font-size:14px;">Preview will appear here...</span>';
+    }
+  }
+
+  function copyBio() {
+    const text = editor.value;
+    if(!text.trim()) return showStatus('Bio is empty', 'error');
+    navigator.clipboard.writeText(text)
+      .then(() => showStatus('✓ Copied with color codes', 'success'))
+      .catch(() => showStatus('Copy failed', 'error'));
+  }
+
+  function showStatus(msg, type) {
+    clearTimeout(statusTimer);
+    statusEl.textContent = msg;
+    statusEl.className = 'show ' + type;
+    statusTimer = setTimeout(() => {
+      statusEl.className = '';
+    }, 2400);
+  }
+
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  const root = document.documentElement;
+
+  themeToggle.addEventListener('change', () => {
+    const isLight = themeToggle.checked;
+    root.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    themeLabel.textContent = isLight ? 'Light' : 'Dark';
+  });
+
+  editor.addEventListener('input', update);
+  update();
+</script>
+</body>
+  </html>
