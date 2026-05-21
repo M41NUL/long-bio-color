@@ -25,6 +25,8 @@
     --input-bg: rgba(255,255,255,0.04);
     --preview-bg: rgba(0,0,0,0.5);
     --footer-bg: rgba(255,255,255,0.03);
+    --toolbar-bg: rgba(255,255,255,0.04);
+    --toolbar-border: rgba(255,255,255,0.08);
   }
   [data-theme="light"] {
     --bg: #f2f2f7;
@@ -44,6 +46,8 @@
     --input-bg: rgba(0,0,0,0.04);
     --preview-bg: rgba(0,0,0,0.06);
     --footer-bg: rgba(0,0,0,0.03);
+    --toolbar-bg: rgba(0,0,0,0.03);
+    --toolbar-border: rgba(0,0,0,0.07);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +66,6 @@
     overflow-x: hidden;
   }
 
-  /* Ambient background blobs */
   body::before, body::after {
     content: '';
     position: fixed;
@@ -70,7 +73,6 @@
     filter: blur(90px);
     z-index: 0;
     pointer-events: none;
-    transition: opacity 0.5s ease;
   }
   body::before {
     width: 520px; height: 520px;
@@ -82,8 +84,6 @@
     background: radial-gradient(circle, rgba(100,80,255,0.07) 0%, transparent 70%);
     bottom: 80px; right: -80px;
   }
-  [data-theme="light"] body::before { background: radial-gradient(circle, rgba(255,180,0,0.12) 0%, transparent 70%); }
-  [data-theme="light"] body::after { background: radial-gradient(circle, rgba(100,80,255,0.08) 0%, transparent 70%); }
 
   .container {
     width: 100%;
@@ -98,18 +98,13 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* ─── HEADER ─── */
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 4px 28px;
   }
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
   .header-logo {
     width: 42px; height: 42px;
     border-radius: 12px;
@@ -121,34 +116,12 @@
   }
   .header-logo:hover { transform: scale(1.08) rotate(-3deg); }
   .header-logo img { width: 26px; height: 26px; }
-  .header-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--text);
-  }
-  .header-title span {
-    color: var(--accent);
-  }
+  .header-title { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; color: var(--text); }
+  .header-title span { color: var(--accent); }
 
-  /* ─── TOGGLE PILL ─── */
-  .toggle-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .toggle-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: 0.3px;
-    transition: color 0.3s;
-  }
-  .toggle-pill {
-    position: relative;
-    width: 50px; height: 28px;
-    cursor: pointer;
-  }
+  .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+  .toggle-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.3px; transition: color 0.3s; }
+  .toggle-pill { position: relative; width: 50px; height: 28px; cursor: pointer; }
   .toggle-pill input { display: none; }
   .toggle-track {
     position: absolute; inset: 0;
@@ -158,10 +131,7 @@
     transition: background 0.35s cubic-bezier(0.4,0,0.2,1);
     backdrop-filter: blur(8px);
   }
-  .toggle-pill input:checked ~ .toggle-track {
-    background: rgba(255,180,0,0.75);
-    border-color: rgba(255,180,0,0.4);
-  }
+  .toggle-pill input:checked ~ .toggle-track { background: rgba(255,180,0,0.75); border-color: rgba(255,180,0,0.4); }
   .toggle-thumb {
     position: absolute;
     top: 3px; left: 3px;
@@ -169,14 +139,11 @@
     background: var(--pill-thumb);
     border-radius: 50%;
     box-shadow: 0 1px 4px var(--pill-thumb-shadow);
-    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
     pointer-events: none;
   }
-  .toggle-pill input:checked ~ .toggle-thumb {
-    transform: translateX(22px);
-  }
+  .toggle-pill input:checked ~ .toggle-thumb { transform: translateX(22px); }
 
-  /* ─── GLASS CARD ─── */
   .card {
     background: var(--glass);
     backdrop-filter: blur(28px) saturate(160%);
@@ -191,8 +158,7 @@
   }
   .card::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     border-radius: 22px;
     background: linear-gradient(135deg, var(--glass-light) 0%, transparent 60%);
     pointer-events: none;
@@ -207,41 +173,20 @@
     margin-bottom: 14px;
   }
 
-  /* ─── COLOR PALETTE ─── */
-  .palette {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    margin-bottom: 18px;
-  }
+  /* PALETTE */
+  .palette { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
   .color-btn {
     width: 32px; height: 32px;
     border-radius: 10px;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s, box-shadow 0.2s;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s;
     position: relative;
   }
-  .color-btn::after {
-    content: '';
-    position: absolute; inset: 0;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.18);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .color-btn:hover {
-    transform: scale(1.22) translateY(-2px);
-    border-color: rgba(255,255,255,0.6);
-  }
-  .color-btn:hover::after { opacity: 1; }
+  .color-btn:hover { transform: scale(1.22) translateY(-2px); border-color: rgba(255,255,255,0.6); }
   .color-btn:active { transform: scale(0.94); }
 
-  .custom-color-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .custom-color-row { display: flex; align-items: center; gap: 12px; }
   input[type="color"] {
     width: 44px; height: 38px;
     border-radius: 10px;
@@ -253,13 +198,57 @@
   }
   input[type="color"]:hover { border-color: var(--border-bright); }
 
-  /* ─── TEXTAREA ─── */
+  /* TOOLBAR */
+  .format-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 11px 13px;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    border-radius: 14px 14px 0 0;
+    border-bottom: none;
+  }
+  .fmt-group { display: flex; gap: 4px; align-items: center; }
+  .fmt-divider { width: 1px; height: 22px; background: var(--border); margin: 0 3px; border-radius: 1px; }
+
+  .fmt-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), color 0.18s;
+    min-width: 34px;
+    height: 32px;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .fmt-btn:hover { background: var(--surface-hover); border-color: var(--border-bright); transform: translateY(-1px); }
+  .fmt-btn:active { transform: scale(0.91); }
+
+  /* Active state — toggled ON */
+  .fmt-btn.is-on {
+    background: rgba(255,180,0,0.2);
+    border-color: rgba(255,180,0,0.5);
+    color: var(--accent);
+  }
+
+  .fmt-label { font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
+
   textarea {
     width: 100%;
     height: 110px;
     padding: 14px 16px;
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 0 0 14px 14px;
     font-size: 15px;
     font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
     background: var(--input-bg);
@@ -269,13 +258,7 @@
     transition: border-color 0.25s, background 0.3s;
     backdrop-filter: blur(8px);
   }
-  textarea:focus {
-    border-color: rgba(255,180,0,0.5);
-    background: rgba(255,180,0,0.04);
-  }
-  [data-theme="light"] textarea:focus {
-    background: rgba(255,180,0,0.03);
-  }
+  textarea:focus { border-color: rgba(255,180,0,0.5); background: rgba(255,180,0,0.04); }
   textarea::placeholder { color: var(--text-secondary); }
 
   .char-counter {
@@ -284,18 +267,11 @@
     font-weight: 500;
     color: var(--text-secondary);
     margin: 6px 2px 0;
-    letter-spacing: 0.2px;
     transition: color 0.3s;
   }
   .char-counter.warn { color: #ff6b6b; }
 
-  /* ─── CONTROLS ─── */
-  .controls {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn {
     display: flex;
     align-items: center;
@@ -310,26 +286,13 @@
     cursor: pointer;
     transition: background 0.22s, border-color 0.22s, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
     backdrop-filter: blur(10px);
-    letter-spacing: 0.2px;
     white-space: nowrap;
   }
-  .btn:hover {
-    background: var(--surface-hover);
-    border-color: var(--border-bright);
-    transform: translateY(-2px);
-  }
-  .btn:active { transform: scale(0.96) translateY(0); }
-  .btn.primary {
-    background: rgba(255,180,0,0.18);
-    border-color: rgba(255,180,0,0.4);
-    color: var(--accent);
-  }
-  .btn.primary:hover {
-    background: rgba(255,180,0,0.28);
-    border-color: rgba(255,180,0,0.6);
-  }
+  .btn:hover { background: var(--surface-hover); border-color: var(--border-bright); transform: translateY(-2px); }
+  .btn:active { transform: scale(0.96); }
+  .btn.primary { background: rgba(255,180,0,0.18); border-color: rgba(255,180,0,0.4); color: var(--accent); }
+  .btn.primary:hover { background: rgba(255,180,0,0.28); border-color: rgba(255,180,0,0.6); }
 
-  /* ─── STATUS TOAST ─── */
   #status {
     position: fixed;
     bottom: 30px; left: 50%;
@@ -344,22 +307,12 @@
     z-index: 999;
     backdrop-filter: blur(16px);
     white-space: nowrap;
-    letter-spacing: 0.2px;
   }
-  #status.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  #status.success {
-    background: rgba(48,209,88,0.9);
-    color: #fff;
-  }
-  #status.error {
-    background: rgba(255,69,58,0.9);
-    color: #fff;
-  }
+  #status.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #status.success { background: rgba(48,209,88,0.9); color: #fff; }
+  #status.error { background: rgba(255,69,58,0.9); color: #fff; }
 
-  /* ─── PREVIEW ─── */
+  /* PREVIEW BOX */
   .preview-box {
     background: var(--preview-bg);
     border: 1px solid var(--border);
@@ -367,14 +320,23 @@
     padding: 18px 20px;
     min-height: 64px;
     font-size: 17px;
-    line-height: 1.5;
+    line-height: 1.65;
     word-break: break-word;
     backdrop-filter: blur(10px);
     transition: background 0.3s;
-    color: #fff;
   }
 
-  /* ─── FOOTER ─── */
+  /* These classes applied inline by JS renderer */
+  .p-bold { font-weight: 800; }
+  .p-italic { font-style: italic; }
+  .p-underline { text-decoration: underline; }
+  .p-strike { text-decoration: line-through; }
+  .p-underline.p-strike { text-decoration: underline line-through; }
+  .p-center { display: block; text-align: center; }
+  .p-left   { display: block; text-align: left; }
+  .p-right  { display: block; text-align: right; }
+
+  /* FOOTER */
   footer {
     width: 100%;
     max-width: 680px;
@@ -387,96 +349,29 @@
     backdrop-filter: blur(20px);
     position: relative;
     z-index: 1;
-    animation: riseIn 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
     text-align: center;
   }
-
-  .footer-dev {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .footer-avatar-img {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255,180,0,0.45);
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  }
+  .footer-dev { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .footer-avatar-img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,180,0,0.45); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
   .footer-avatar-img:hover { transform: scale(1.08); }
-  .footer-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.2px;
-  }
-  .footer-handle {
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 500;
-    margin-top: 1px;
-  }
-
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-
+  .footer-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .footer-handle { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 1px; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
   .footer-link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px;
     padding: 7px 14px;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--surface);
     color: var(--text);
     text-decoration: none;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 12px; font-weight: 500;
     transition: background 0.2s, border-color 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
     backdrop-filter: blur(8px);
   }
-  .footer-link:hover {
-    background: var(--surface-hover);
-    border-color: var(--border-bright);
-    transform: translateY(-2px);
-  }
-  .footer-link:active { transform: scale(0.95); }
-  .footer-link svg { flex-shrink: 0; }
+  .footer-link:hover { background: var(--surface-hover); border-color: var(--border-bright); transform: translateY(-2px); }
+  .footer-copy { margin-top: 16px; font-size: 11px; color: var(--text-secondary); }
 
-  .footer-copy {
-    margin-top: 16px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-align: center;
-    letter-spacing: 0.2px;
-  }
-
-  /* ─── SEPARATOR ─── */
-  .sep {
-    height: 1px;
-    background: var(--border);
-    margin: 4px 0;
-    border-radius: 1px;
-  }
-
-  /* Stagger card animations */
-  .card:nth-child(2) { animation-delay: 0.05s; }
-  .card:nth-child(3) { animation-delay: 0.1s; }
-  .card:nth-child(4) { animation-delay: 0.15s; }
-  .card:nth-child(5) { animation-delay: 0.2s; }
-
-  .fmt-btn { min-width: 52px; justify-content: center; gap: 5px; }
-  .fmt-btn b, .fmt-btn i, .fmt-btn u { font-size: 13px; }
-
-  /* iOS-style spring ripple on color btn click */
   @keyframes springPop {
     0%   { transform: scale(1); }
     40%  { transform: scale(1.35) translateY(-3px); }
@@ -489,6 +384,7 @@
     .header-title { font-size: 16px; }
     .card { padding: 16px; }
     footer { padding: 20px 16px; }
+    .fmt-btn { padding: 5px 8px; min-width: 30px; height: 30px; }
   }
 </style>
 </head>
@@ -528,9 +424,75 @@
     </div>
   </div>
 
-  <!-- EDITOR -->
+  <!-- EDITOR CARD -->
   <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.07s both;">
     <div class="section-label">Bio Editor</div>
+
+    <!-- FORMAT TOOLBAR -->
+    <div class="format-toolbar">
+      <div class="fmt-group">
+        <!-- Bold -->
+        <button class="fmt-btn" id="btn-B" onclick="toggleFmtTag('B')" title="Bold [B]">
+          <b style="font-family:Georgia,serif;font-size:14px;letter-spacing:-0.5px;">B</b>
+        </button>
+        <!-- Italic -->
+        <button class="fmt-btn" id="btn-I" onclick="toggleFmtTag('I')" title="Italic [I]">
+          <i style="font-family:Georgia,serif;font-style:italic;font-size:14px;">I</i>
+        </button>
+        <!-- Underline -->
+        <button class="fmt-btn" id="btn-U" onclick="toggleFmtTag('U')" title="Underline [U]">
+          <u style="font-size:13px;">U</u>
+        </button>
+        <!-- Strike -->
+        <button class="fmt-btn" id="btn-S" onclick="toggleFmtTag('S')" title="Strikethrough [S]">
+          <s style="font-size:13px;">S</s>
+        </button>
+      </div>
+
+      <div class="fmt-divider"></div>
+
+      <div class="fmt-group">
+        <!-- Left -->
+        <button class="fmt-btn" id="btn-L" onclick="toggleAlignTag('L')" title="Align Left [L]">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor">
+            <rect x="0" y="0" width="14" height="2" rx="1"/>
+            <rect x="0" y="5" width="10" height="2" rx="1"/>
+            <rect x="0" y="10" width="12" height="2" rx="1"/>
+          </svg>
+        </button>
+        <!-- Center -->
+        <button class="fmt-btn" id="btn-C" onclick="toggleAlignTag('C')" title="Center [C]">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor">
+            <rect x="0" y="0" width="14" height="2" rx="1"/>
+            <rect x="2" y="5" width="10" height="2" rx="1"/>
+            <rect x="1" y="10" width="12" height="2" rx="1"/>
+          </svg>
+        </button>
+        <!-- Right -->
+        <button class="fmt-btn" id="btn-R" onclick="toggleAlignTag('R')" title="Align Right [R]">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor">
+            <rect x="0" y="0" width="14" height="2" rx="1"/>
+            <rect x="4" y="5" width="10" height="2" rx="1"/>
+            <rect x="2" y="10" width="12" height="2" rx="1"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="fmt-divider"></div>
+
+      <div class="fmt-group">
+        <!-- Line break -->
+        <button class="fmt-btn" onclick="insertLineBreak()" title="New Line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 10 4 15 9 20"/>
+            <path d="M20 4v7a4 4 0 0 1-4 4H4"/>
+          </svg>
+          <span class="fmt-label">BR</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TEXTAREA -->
     <textarea id="editor" placeholder="Type your bio here..."></textarea>
     <div id="charCount" class="char-counter">0 characters</div>
   </div>
@@ -538,18 +500,6 @@
   <!-- CONTROLS -->
   <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.12s both;">
     <div class="controls">
-      <button class="btn fmt-btn" onclick="insertFormat('[b]')" title="Bold [b]">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>
-        <b style="font-style:normal;">B</b>
-      </button>
-      <button class="btn fmt-btn" onclick="insertFormat('[i]')" title="Italic [i]">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
-        <i style="font-style:italic;">I</i>
-      </button>
-      <button class="btn fmt-btn" onclick="insertFormat('[u]')" title="Underline [u]">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg>
-        <u>U</u>
-      </button>
       <button class="btn" onclick="clearEditor()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
         Clear
@@ -564,7 +514,9 @@
   <!-- PREVIEW -->
   <div class="card" style="animation: riseIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.17s both;">
     <div class="section-label">In-Game Preview</div>
-    <div id="preview" class="preview-box"><span style="color:rgba(255,255,255,0.25);font-size:14px;">Preview will appear here...</span></div>
+    <div id="preview" class="preview-box">
+      <span style="color:rgba(255,255,255,0.25);font-size:14px;">Preview will appear here...</span>
+    </div>
   </div>
 
 </div>
@@ -605,19 +557,17 @@
   <div class="footer-copy">© <span id="footerYear"></span> MAINUL - X. All Rights Reserved.</div>
 </footer>
 
-<!-- STATUS TOAST -->
 <div id="status"></div>
 
 <script>
-  const colors = ["FFFF00","00FF00","FF0000","0000FF","00FFFF","FF00FF","FF9000","6E00FF","CCFF00","0F7209","FFD3EF","FFFFFF","000000","FF4500","1DA1F2","7289DA","00B0FF","FF6B6B","A8FF78","FFC0CB"];
+  const COLORS = ["FFFF00","00FF00","FF0000","0000FF","00FFFF","FF00FF","FF9000","6E00FF","CCFF00","0F7209","FFD3EF","FFFFFF","000000","FF4500","1DA1F2","7289DA","00B0FF","FF6B6B","A8FF78","FFC0CB","FF1493","00FF7F","FF6600","8B00FF"];
   const editor = document.getElementById('editor');
   const preview = document.getElementById('preview');
   const statusEl = document.getElementById('status');
-  const colorPicker = document.getElementById('colorPicker');
   let statusTimer;
 
-  // Build palette
-  colors.forEach(hex => {
+  // ── Build color palette ──
+  COLORS.forEach(hex => {
     const btn = document.createElement('div');
     btn.className = 'color-btn';
     btn.style.backgroundColor = '#' + hex;
@@ -627,39 +577,121 @@
       void btn.offsetWidth;
       btn.classList.add('popped');
       btn.addEventListener('animationend', () => btn.classList.remove('popped'), { once: true });
-      applyColor(hex);
+      insertTag('[' + hex.toUpperCase() + ']');
     };
     document.getElementById('palette').appendChild(btn);
   });
 
-  function applyColor(hex) {
-    const start = editor.selectionStart;
-    const val = editor.value;
-    const tag = `[${hex.toUpperCase()}]`;
-    editor.value = val.slice(0, start) + tag + val.slice(start);
-    editor.selectionStart = editor.selectionEnd = start + tag.length;
-    editor.focus();
-    update();
-  }
-
   function applyCustomColor() {
-    const hex = colorPicker.value.replace('#','').toUpperCase();
-    applyColor(hex);
+    const hex = document.getElementById('colorPicker').value.replace('#','').toUpperCase();
+    insertTag('[' + hex + ']');
   }
 
-  function insertFormat(tag) {
-    const start = editor.selectionStart;
-    const val = editor.value;
-    editor.value = val.slice(0, start) + tag + val.slice(start);
-    editor.selectionStart = editor.selectionEnd = start + tag.length;
+  // ── Insert a tag at cursor (no closing tag — FF style) ──
+  function insertTag(tag) {
+    const s = editor.selectionStart;
+    editor.value = editor.value.slice(0, s) + tag + editor.value.slice(s);
+    editor.selectionStart = editor.selectionEnd = s + tag.length;
     editor.focus();
     update();
   }
 
-  function clearEditor() {
-    editor.value = '';
-    update();
+  // ── Toggle format tags (B, I, U, S) ──
+  // If button is already ON → insert same tag again to toggle OFF (FF reuses tag to toggle)
+  function toggleFmtTag(key) {
+    insertTag('[' + key + ']');
+    syncToolbarState();
+  }
+
+  // ── Align tags (L, C, R) — mutual exclusive visual highlight ──
+  function toggleAlignTag(key) {
+    insertTag('[' + key + ']');
+    // Visually highlight the chosen align btn
+    ['L','C','R'].forEach(k => {
+      document.getElementById('btn-' + k).classList.remove('is-on');
+    });
+    document.getElementById('btn-' + key).classList.add('is-on');
     editor.focus();
+  }
+
+  function insertLineBreak() {
+    insertTag('\n');
+  }
+
+  // ── Sync toolbar highlight based on cursor position ──
+  function syncToolbarState() {
+    const text = editor.value.slice(0, editor.selectionStart);
+    // For each toggle key count occurrences — odd = ON
+    ['B','I','U','S'].forEach(key => {
+      const re = new RegExp('\\[' + key + '\\]', 'gi');
+      const matches = (text.match(re) || []).length;
+      const btn = document.getElementById('btn-' + key);
+      if (matches % 2 === 1) {
+        btn.classList.add('is-on');
+      } else {
+        btn.classList.remove('is-on');
+      }
+    });
+  }
+
+  // ── Preview renderer ──
+  // Parses FF-style tags and renders HTML with correct styles
+  function renderPreview(raw) {
+    // Tokenize: split on any [TAG] including color hex
+    const tokenRe = /(\[[A-F0-9]{6}\]|\[B\]|\[I\]|\[U\]|\[S\]|\[C\]|\[L\]|\[R\])/gi;
+    const parts = raw.split(tokenRe);
+
+    // State
+    let color = null;
+    let bold = false, italic = false, underline = false, strike = false;
+    let align = null; // null | 'L' | 'C' | 'R'
+
+    let html = '';
+
+    for (let part of parts) {
+      if (!part) continue;
+
+      const up = part.toUpperCase();
+
+      if (/^\[[A-F0-9]{6}\]$/.test(up)) {
+        color = up.slice(1, 7);
+        continue;
+      }
+
+      switch(up) {
+        case '[B]': bold = !bold; continue;
+        case '[I]': italic = !italic; continue;
+        case '[U]': underline = !underline; continue;
+        case '[S]': strike = !strike; continue;
+        case '[C]': align = (align === 'C') ? null : 'C'; continue;
+        case '[L]': align = (align === 'L') ? null : 'L'; continue;
+        case '[R]': align = (align === 'R') ? null : 'R'; continue;
+      }
+
+      // It's a text segment — render each line separately for align support
+      const lines = part.split('\n');
+      lines.forEach((line, idx) => {
+        if (idx > 0) html += '<br>';
+        if (!line) return;
+
+        // Build CSS classes
+        let cls = [];
+        if (bold)      cls.push('p-bold');
+        if (italic)    cls.push('p-italic');
+        if (underline) cls.push('p-underline');
+        if (strike)    cls.push('p-strike');
+        if (align === 'C') cls.push('p-center');
+        if (align === 'L') cls.push('p-left');
+        if (align === 'R') cls.push('p-right');
+
+        let style = color ? `color:#${color};` : '';
+
+        const escaped = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        html += `<span class="${cls.join(' ')}" style="${style}">${escaped}</span>`;
+      });
+    }
+
+    return html;
   }
 
   function update() {
@@ -669,25 +701,27 @@
     counter.textContent = len + ' character' + (len !== 1 ? 's' : '');
     counter.classList.toggle('warn', len > 120);
 
-    let html = text
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/\[([A-F0-9]{6})\]/gi, (m, col) => `</span><span style="color:#${col}">`)
-      .replace(/\[b\]/gi, '<b>')
-      .replace(/\[i\]/gi, '<i>')
-      .replace(/\[u\]/gi, '<u>');
-
-    if(text.trim()){
-      preview.innerHTML = '<span>' + html + '</span>';
+    if (text.trim()) {
+      preview.innerHTML = renderPreview(text);
     } else {
       preview.innerHTML = '<span style="color:rgba(255,255,255,0.25);font-size:14px;">Preview will appear here...</span>';
     }
+
+    syncToolbarState();
+  }
+
+  function clearEditor() {
+    editor.value = '';
+    ['B','I','U','S','L','C','R'].forEach(k => document.getElementById('btn-'+k).classList.remove('is-on'));
+    update();
+    editor.focus();
   }
 
   function copyBio() {
     const text = editor.value;
-    if(!text.trim()) return showStatus('Bio is empty', 'error');
+    if (!text.trim()) return showStatus('Bio is empty', 'error');
     navigator.clipboard.writeText(text)
-      .then(() => showStatus('✓ Copied with color codes', 'success'))
+      .then(() => showStatus('✓ Copied!', 'success'))
       .catch(() => showStatus('Copy failed', 'error'));
   }
 
@@ -695,26 +729,24 @@
     clearTimeout(statusTimer);
     statusEl.textContent = msg;
     statusEl.className = 'show ' + type;
-    statusTimer = setTimeout(() => {
-      statusEl.className = '';
-    }, 2400);
+    statusTimer = setTimeout(() => { statusEl.className = ''; }, 2400);
   }
 
   document.getElementById('footerYear').textContent = new Date().getFullYear();
 
-  // Theme toggle
+  // Theme
   const themeToggle = document.getElementById('themeToggle');
-  const themeLabel = document.getElementById('themeLabel');
-  const root = document.documentElement;
-
+  const themeLabel  = document.getElementById('themeLabel');
   themeToggle.addEventListener('change', () => {
-    const isLight = themeToggle.checked;
-    root.setAttribute('data-theme', isLight ? 'light' : 'dark');
-    themeLabel.textContent = isLight ? 'Light' : 'Dark';
+    const light = themeToggle.checked;
+    document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+    themeLabel.textContent = light ? 'Light' : 'Dark';
   });
 
   editor.addEventListener('input', update);
+  editor.addEventListener('keyup', syncToolbarState);
+  editor.addEventListener('click', syncToolbarState);
   update();
 </script>
 </body>
-  </html>
+</html>
